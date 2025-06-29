@@ -63,8 +63,10 @@ class StepDict(TypedDict, total=False):
     generation: Optional[Dict]
     showInput: Optional[Union[bool, str]]
     defaultOpen: Optional[bool]
+    collapse: Optional[bool]
     language: Optional[str]
     feedback: Optional[FeedbackDict]
+    
 
 
 def flatten_args_kwargs(func, args, kwargs):
@@ -86,6 +88,7 @@ def step(
     language: Optional[str] = None,
     show_input: Union[bool, str] = "json",
     default_open: bool = False,
+    collapse: bool = False,
 ):
     """Step decorator for async and sync functions."""
 
@@ -109,6 +112,7 @@ def step(
                     language=language,
                     show_input=show_input,
                     default_open=default_open,
+                    collapse=collapse,
                     metadata=metadata,
                 ) as step:
                     try:
@@ -138,6 +142,7 @@ def step(
                     language=language,
                     show_input=show_input,
                     default_open=default_open,
+                    collapse=collapse,
                     metadata=metadata,
                 ) as step:
                     try:
@@ -184,6 +189,7 @@ class Step:
     generation: Optional[BaseGeneration]
     language: Optional[str]
     default_open: Optional[bool]
+    collapse: Optional[bool]
     elements: Optional[List[Element]]
     fail_on_persist_error: bool
 
@@ -198,6 +204,7 @@ class Step:
         tags: Optional[List[str]] = None,
         language: Optional[str] = None,
         default_open: Optional[bool] = False,
+        collapse: Optional[bool] = False,
         show_input: Union[bool, str] = "json",
         thread_id: Optional[str] = None,
     ):
@@ -225,6 +232,7 @@ class Step:
         self.end = None
 
         self.streaming = False
+        self.collapse = collapse
         self.persisted = False
         self.fail_on_persist_error = False
 
@@ -308,6 +316,7 @@ class Step:
             "defaultOpen": self.default_open,
             "showInput": self.show_input,
             "generation": self.generation.to_dict() if self.generation else None,
+            "collapse": self.collapse,
         }
         return _dict
 
