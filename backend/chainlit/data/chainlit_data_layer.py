@@ -138,7 +138,7 @@ class ChainlitDataLayer(BaseDataLayer):
     @queue_until_user_message()
     async def create_element(self, element: "Element"):
         if not self.storage_client:
-            logger.warning(
+            logger.warn(
                 "Data Layer: create_element error. No cloud storage configured!"
             )
             return
@@ -548,7 +548,7 @@ class ChainlitDataLayer(BaseDataLayer):
             "name": thread_name,
             "userId": user_id,
             "tags": tags,
-            "metadata": json.dumps(metadata) if metadata is not None else None,
+            "metadata": json.dumps(metadata or {}),
         }
 
         # Remove None values

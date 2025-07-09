@@ -41,7 +41,6 @@ from chainlit.element import (
 )
 from chainlit.message import (
     AskActionMessage,
-    AskElementMessage,
     AskFileMessage,
     AskUserMessage,
     ErrorMessage,
@@ -126,7 +125,6 @@ __getattr__ = make_module_getattr(
 __all__ = [
     "Action",
     "AskActionMessage",
-    "AskElementMessage",
     "AskFileMessage",
     "AskUserMessage",
     "AsyncLangchainCallbackHandler",
