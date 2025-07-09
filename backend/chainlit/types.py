@@ -125,7 +125,7 @@ class AskSpec(DataClassJsonMixin):
     """Specification for asking the user."""
 
     timeout: int
-    type: Literal["text", "file", "action", "element"]
+    type: Literal["text", "file", "action"]
     step_id: str
 
 
@@ -137,13 +137,6 @@ class AskFileSpec(FileSpec, AskSpec, DataClassJsonMixin):
 @dataclass
 class AskActionSpec(ActionSpec, AskSpec, DataClassJsonMixin):
     """Specification for asking the user an action"""
-
-
-@dataclass
-class AskElementSpec(AskSpec, DataClassJsonMixin):
-    """Specification for asking the user a custom element"""
-
-    element_id: str
 
 
 class FileReference(TypedDict):
@@ -200,10 +193,6 @@ class AskActionResponse(TypedDict):
     tooltip: str
     forId: str
     id: str
-
-
-class AskElementResponse(TypedDict, total=False):
-    submitted: bool
 
 
 class UpdateThreadRequest(BaseModel):
@@ -267,7 +256,6 @@ class Starter(DataClassJsonMixin):
 
     label: str
     message: str
-    command: Optional[str] = None
     icon: Optional[str] = None
 
 

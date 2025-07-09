@@ -1,19 +1,14 @@
 import mapValues from 'lodash/mapValues';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
-import {
-  chatSettingsValueState,
-  useChatData,
-  useChatInteract
-} from '@chainlit/react-client';
+import { useChatData, useChatInteract } from '@chainlit/react-client';
 
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle
@@ -36,27 +31,20 @@ export default function ChatSettingsModal() {
   const { handleSubmit, setValue, reset, watch } = useForm({
     defaultValues: chatSettingsValue
   });
-  const setChatSettingsValue = useSetRecoilState(chatSettingsValueState);
 
   // Reset form when default values change
   useEffect(() => {
     reset(chatSettingsValue);
   }, [chatSettingsValue, reset]);
 
-  const handleClose = (open: boolean) => {
-    if (!open) {
-      reset(chatSettingsValue);
-      setChatSettingsOpen(false);
-    }
-  };
+  const handleClose = () => setChatSettingsOpen(false);
 
   const handleConfirm = handleSubmit((data) => {
     const processedValues = mapValues(data, (x: TFormInputValue) =>
       x !== '' ? x : null
     );
     updateChatSettings(processedValues);
-    setChatSettingsValue(processedValues);
-    setChatSettingsOpen(false);
+    handleClose();
   });
 
   const handleReset = () => {
@@ -82,9 +70,6 @@ export default function ChatSettingsModal() {
           <DialogTitle>
             <Translator path="chat.settings.title" />
           </DialogTitle>
-          <DialogDescription className="sr-only">
-            Customize your chat settings here
-          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col flex-grow overflow-y-auto gap-6 p-1">
           {chatSettingsInputs.map((input: any) => (
@@ -104,7 +89,7 @@ export default function ChatSettingsModal() {
             <Translator path="common.actions.reset" />
           </Button>
           <div className="flex-1" />
-          <Button variant="ghost" onClick={() => handleClose(false)}>
+          <Button variant="ghost" onClick={handleClose}>
             <Translator path="common.actions.cancel" />
           </Button>
           <Button onClick={handleConfirm} id="confirm" autoFocus>
