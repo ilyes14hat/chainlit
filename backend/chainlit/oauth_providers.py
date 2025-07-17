@@ -557,11 +557,10 @@ class AWSCognitoOAuthProvider(OAuthProvider):
     def __init__(self):
         self.client_id = os.environ.get("OAUTH_COGNITO_CLIENT_ID")
         self.client_secret = os.environ.get("OAUTH_COGNITO_CLIENT_SECRET")
-        self.scopes = os.environ.get("OAUTH_COGNITO_SCOPE", "openid profile email")
         self.authorize_params = {
             "response_type": "code",
             "client_id": self.client_id,
-            "scope": self.scopes,
+            "scope": "openid profile email",
         }
 
         if prompt := self.get_prompt():

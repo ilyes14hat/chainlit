@@ -138,7 +138,7 @@ class ChainlitDataLayer(BaseDataLayer):
     @queue_until_user_message()
     async def create_element(self, element: "Element"):
         if not self.storage_client:
-            logger.warning(
+            logger.warn(
                 "Data Layer: create_element error. No cloud storage configured!"
             )
             return
@@ -175,18 +175,18 @@ class ChainlitDataLayer(BaseDataLayer):
         elif not element.url:
             raise ValueError("Element url, path or content must be provided")
 
-        if element.thread_id:
-            path = f"threads/{element.thread_id}/files/{element.id}"
+        if element.path:
+            path = element.path
         else:
             path = f"files/{element.id}"
 
-        if content is not None:
-            await self.storage_client.upload_file(
-                object_key=path,
-                data=content,
-                mime=element.mime or "application/octet-stream",
-                overwrite=True,
-            )
+        # if content is not None:
+        #     await self.storage_client.upload_file(
+        #         object_key=path,
+        #         data=content,
+        #         mime=element.mime or "application/octet-stream",
+        #         overwrite=True,
+        #     )
 
         query = """
         INSERT INTO "Element" (

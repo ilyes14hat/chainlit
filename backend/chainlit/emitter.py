@@ -2,6 +2,7 @@ import asyncio
 import uuid
 from typing import Any, Dict, List, Literal, Optional, Union, cast, get_args
 
+from literalai.helper import utc_now
 from socketio.exceptions import TimeoutError
 
 from chainlit.chat_context import chat_context
@@ -14,7 +15,6 @@ from chainlit.session import BaseSession, WebsocketSession
 from chainlit.step import StepDict
 from chainlit.types import (
     AskActionResponse,
-    AskElementResponse,
     AskSpec,
     CommandDict,
     FileDict,
@@ -25,7 +25,6 @@ from chainlit.types import (
     ToastType,
 )
 from chainlit.user import PersistedUser
-from chainlit.utils import utc_now
 
 
 class BaseChainlitEmitter:
@@ -101,9 +100,7 @@ class BaseChainlitEmitter:
 
     async def send_ask_user(
         self, step_dict: StepDict, spec: AskSpec, raise_on_timeout=False
-    ) -> Optional[
-        Union["StepDict", "AskActionResponse", "AskElementResponse", List["FileDict"]]
-    ]:
+    ) -> Optional[Union["StepDict", "AskActionResponse", List["FileDict"]]]:
         """Stub method to send a prompt to the UI and wait for a response."""
         pass
 
@@ -288,7 +285,6 @@ class ChainlitEmitter(BaseChainlitEmitter):
                         "chainlitKey": file["id"],
                         "display": "inline",
                         "type": Element.infer_type_from_mime(file["type"]),
-                        "mime": file["type"],
                     }
                 )
                 for file in files
@@ -313,14 +309,14 @@ class ChainlitEmitter(BaseChainlitEmitter):
             # Send the prompt to the UI
             user_res = await self.emit_call(
                 "ask", {"msg": step_dict, "spec": spec.to_dict()}, spec.timeout
-            )  # type: Optional[Union["StepDict", "AskActionResponse", "AskElementResponse", List["FileReference"]]]
+            )  # type: Optional[Union["StepDict", "AskActionResponse", List["FileReference"]]]
 
             # End the task temporarily so that the User can answer the prompt
             await self.task_end()
 
-            final_res: Optional[
-                Union[StepDict, AskActionResponse, AskElementResponse, List[FileDict]]
-            ] = None
+            final_res: Optional[Union[StepDict, AskActionResponse, List[FileDict]]] = (
+                None
+            )
 
             if user_res:
                 interaction: Union[str, None] = None
@@ -357,9 +353,6 @@ class ChainlitEmitter(BaseChainlitEmitter):
                     action_res = cast(AskActionResponse, user_res)
                     final_res = action_res
                     interaction = action_res["name"]
-                elif spec.type == "element":
-                    final_res = cast(AskElementResponse, user_res)
-                    interaction = "custom_element"
 
                 if not self.session.has_first_interaction and interaction:
                     self.session.has_first_interaction = True

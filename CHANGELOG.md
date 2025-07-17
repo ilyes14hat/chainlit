@@ -4,6 +4,7 @@ All notable changes to Chainlit will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+<<<<<<< HEAD
 ## [2.6.2] - 2025-07-16
 
 Technical release due to missed `frontend` and `copilot` folders in previous one.
@@ -54,6 +55,8 @@ Technical release due to missed `frontend` and `copilot` folders in previous one
 - **LiteralAI** is being sunset and will be removed in one of the next releases. Please migrate to the official data layer instead.
 - Telemetry is now opt-in by default and will be removed in the next release.
 
+=======
+>>>>>>> a6a9922a808aef7d4b1b3aaaec99da35783fa71e
 ## [2.5.5] - 2025-04-14
 
 ### Added
@@ -68,7 +71,6 @@ Technical release due to missed `frontend` and `copilot` folders in previous one
 - CopilotFunction is now usable in custom JS
 - Header link now have an optional `display_name` to display text next to the icon
 - The default .env file loaded by chainlit is now configurable with `CHAINLIT_ENV_FILE`
-
 
 ### Changed
 

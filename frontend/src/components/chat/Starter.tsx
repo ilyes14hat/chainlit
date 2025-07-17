@@ -32,7 +32,7 @@ export default function Starter({ starter }: StarterProps) {
     const message: IStep = {
       threadId: '',
       id: uuidv4(),
-      command: starter.command ?? selectedCommand?.id,
+      command: selectedCommand?.id,
       name: user?.identifier || 'User',
       type: 'user_message',
       output: starter.message,
